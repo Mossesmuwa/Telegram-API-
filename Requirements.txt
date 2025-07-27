@@ -1,4 +1,6 @@
-telethon==1.33.0
+# Stable versions that install with no issues
+telethon==1.30.3
+colorama==0.4.6
 requests
 python-dotenv
 tqdm
