@@ -1,37 +1,64 @@
+import argparse
 from telethon.sync import TelegramClient
-import os, sys
+from colorama import Fore, init
+import sys, os
 
-# Replace with your credentials
-api_id = 1234567  # <-- Your real API ID
-api_hash = 'your_api_hash_here'  # <-- Your API Hash
-phone = '+2567xxxxxxx'  # <-- Your phone number
+# Telegram credentials
+api_id = 1234567
+api_hash = 'your_api_hash_here'
+phone = '+2567xxxxxxx'
 
-# Progress bar function
+# Init color
+init(autoreset=True)
+
 def show_progress(current, total):
     percent = current * 100 / total
     bar = ('█' * int(percent // 5)).ljust(20)
-    sys.stdout.write(f"\rDownloading: |{bar}| {percent:.1f}%")
+    sys.stdout.write(f"\r{Fore.YELLOW}Downloading: |{bar}| {percent:.1f}%")
     sys.stdout.flush()
 
-# --- User Inputs ---
-channel = input("Enter the channel/group username (with or without @): ").strip()
-if not channel.startswith('@'):
-    channel = '@' + channel
+def banner():
+    print(Fore.CYAN + r"""
+ _______        _        _                                  
+|__   __|      (_)      | |                                 
+   | | ___  ___ _ ______| |__   ___  ___ ___  ___ __ _ _ __ 
+   | |/ _ \/ __| |______| '_ \ / _ \/ __/ __|/ __/ _` | '__|
+   | |  __/\__ \ |      | | | |  __/\__ \__ \ (_| (_| | |   
+   |_|\___||___/_|      |_| |_|\___||___/___/\___\__,_|_|   
+                                                          
+        TELEGRAM VIDEO DOWNLOADER
+""")
 
-user_input = input("Enter message ID(s) to download (separated by commas): ")
-message_ids = [int(x.strip()) for x in user_input.split(',') if x.strip().isdigit()]
+def main():
+    parser = argparse.ArgumentParser(description='Download Telegram videos by message ID')
+    parser.add_argument('--channel', '-c', help='Telegram channel or group username (with or without @)', required=True)
+    parser.add_argument('--ids', '-i', help='Comma-separated message IDs to download', required=True)
 
-# --- Telegram Client ---
-with TelegramClient('session', api_id, api_hash) as client:
-    for msg_id in message_ids:
-        try:
-            message = client.get_messages(channel, ids=msg_id)
-            if message and message.video:
-                print(f"\nFound video in message {msg_id}")
-                filename = f"video_{msg_id}.mp4"
-                client.download_media(message, file=filename, progress_callback=show_progress)
-                print(f"\n✅ Download complete: {filename}")
-            else:
-                print(f"\n⚠️ No video found in message {msg_id}")
-        except Exception as e:
-            print(f"\n❌ Error downloading message {msg_id}: {e}")
+    args = parser.parse_args()
+    channel = args.channel.strip()
+    if not channel.startswith('@'):
+        channel = '@' + channel
+    try:
+        message_ids = [int(x.strip()) for x in args.ids.split(',')]
+    except ValueError:
+        print(Fore.RED + "Invalid message ID(s).")
+        sys.exit(1)
+
+    banner()
+
+    with TelegramClient('session', api_id, api_hash) as client:
+        for msg_id in message_ids:
+            try:
+                message = client.get_messages(channel, ids=msg_id)
+                if message and message.video:
+                    print(Fore.BLUE + f"\n📦 Found video in message {msg_id}")
+                    filename = f"video_{msg_id}.mp4"
+                    client.download_media(message, file=filename, progress_callback=show_progress)
+                    print(Fore.GREEN + f"\n✅ Download complete: {filename}")
+                else:
+                    print(Fore.YELLOW + f"\n⚠️ No video found in message {msg_id}")
+            except Exception as e:
+                print(Fore.RED + f"\n❌ Error: {e}")
+
+if __name__ == '__main__':
+    main()
