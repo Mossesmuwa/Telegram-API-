@@ -1,28 +1,26 @@
+# TELDL - Telegram Video Downloader (Linux CLI Style)
 
-# Telegram File Downloader Script (Termux + Python)
-
-This script allows you to download files (videos, documents, etc.) from a specific Telegram group or channel using the Telegram API. It runs in **Termux** on Android, using Python and `telethon`.
-
-## 📌 Features
-
-- Download media from Telegram groups or channels
-- Supports filtering by message ID
-- Progress and completion messages
-- Customizable group/channel and message input
+`teldl` is a command-line utility for downloading videos from Telegram messages using the Telethon API. It mimics the look and feel of real Linux tools like `zphisher`, `youtube-dl`, etc.
 
 ---
 
-## 🧰 Requirements
+## ✅ Features
 
-- Termux (Android)
-- Python (≥ 3.10 recommended)
-- Telegram API credentials (API ID and API Hash)
-- `telethon` Python library
+- Download videos by message ID from Telegram channels or groups
+- CLI arguments support (`--channel`, `--ids`)
+- Colored output and terminal UI
+- Works inside Termux and Linux
+- Includes man page and shell launcher
 
 ---
 
-## ⚙️ Setup Instructions
+## 🔧 Requirements
 
-1. **Install Python and pip:**
-   ```bash
-   pkg update && pkg install python -y
+- Python 3.7+
+- `telethon`
+- `colorama`
+
+Install them with:
+
+```bash
+pip install -r requirements.txt
