@@ -1,0 +1,19 @@
+.TH TELDL 1 "July 2025" "v1.0" "User Commands"
+.SH NAME
+teldl \- Download videos from Telegram using message IDs
+.SH SYNOPSIS
+teldl --channel @channel --ids 1001,1002
+.SH DESCRIPTION
+teldl uses the Telethon API to fetch and download videos by message ID from Telegram channels or groups.
+.SH OPTIONS
+.TP
+--channel, -c
+Telegram channel or group (must start with @)
+.TP
+--ids, -i
+Comma-separated message IDs to download (e.g., 1001,1002)
+.TP
+--help, -h
+Show this help message and exit
+.SH EXAMPLES
+teldl -c @mychannel -i 1001,1002
